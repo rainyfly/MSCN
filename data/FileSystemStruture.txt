@@ -1,0 +1,26 @@
+Img format: .TIF
+valid set:
+
+building = [87, 250, 384, 424, 558, 660, 761, 854, 1241, 1493, 1746, 1990]
+landscape = [37, 203, 382, 443, 512, 703, 865, 993, 1157, 1332, 1600, 1853]
+objects = [127,  389, 908,  1741]
+people = [304, 513, 969, 1360, 1621, 1822]
+nature = [70, 274, 436, 751, 1037, 1279]
+
+testset = building + objects + people + landscape + nature
+
+data
+    RAISE_train_HR
+
+    RAISE_train_LR_mosaic
+        X2
+        X3
+        X4
+        X8
+    RAISE_valid_HR
+
+    RAISE_valid_LR_mosaic
+        X2
+        X3
+        X4
+        X8
