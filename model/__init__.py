@@ -11,7 +11,7 @@ class Model(nn.Module):
 
         self.scale = args.scale
         self.idx_scale = 0
-        self.self_sensemble = args.self_sensemble
+        self.self_ensemble = args.self_ensemble
         self.chop = args.chop
         self.precision = args.precision
         self.cpu = args.cpu
@@ -46,7 +46,7 @@ class Model(nn.Module):
         if hasattr(target, 'set_scale'):
             target.set_scale(idx_scale)
         
-        if self.self_sensemble and not self.training:
+        if self.self_ensemble and not self.training:
             if self.chop:
                 forward_function = self.forward_chop
             else:
@@ -135,5 +135,53 @@ class Model(nn.Module):
         return output
     
     def state_dict(self, **kwargs):
+        target = self.get_model()
+        return target.state_dict(**kwargs)
+    
+    def save(self, apath, epoch, is_best=False):
+        target = self.get_model()
+        torch.save(
+            target.state_dict(),
+            os.path.join(apath, 'model', 'model_latest.pt')
+        )
+        if is_best:
+            torch.save(
+                target.state_dict(),
+                os.path.join(apath, 'model', 'model_best.pt')
+            )
+        if self.save_models:
+            torch.save(
+                target.state_dict(),
+                os.path.join(apath, 'model', 'model_{}.pt'.format(epoch))
+            )
+    
+    def load(self, apath, pre_train='.', resume=-1, cpu=False):
+        if cpu:
+            kwargs = {'map_location': lambda storage, loc: storage}
+        else:
+            kwargs = {}
+        if resume == -1:
+            self.get_model().load_state_dict(
+                torch.load(
+                    os.path.join(apath, 'model', 'model_latest.pt'),
+                    **kwargs
+                ),
+                strict = False
+            )
+        elif resume == 0:
+            if pre_train != '.':
+                print('Loading model from{}'.format(pre_train))
+                self.get_model().load_state_dict(
+                    torch.load(pre_train, **kwargs),
+                    strict = False
+                )
+        else:
+            self.get_model().load_state_dict(
+                torch.load(
+                    os.path.join(apath, 'model', 'model_{}.pt'.format(resume)),
+                    **kwargs
+                ),
+                strict=False
+            )
         
 
