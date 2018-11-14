@@ -39,6 +39,7 @@ def set_channel(l, n_channel):
 
     return [_set_channel(_l) for _l in l]
 
+
 def np2Tensor(l, rgb_range):
     def _np2Tensor(img):
         np_transpose = np.ascontiguousarray(img.transpose((2, 0, 1)))
