@@ -116,7 +116,7 @@ class checkpoint():
     
     def save_results(self, filename, save_list, scale):
         filename = '{}/results/{}_X{}_'.format(self.dir, filename, scale)
-        postfix = ('MosaicLR', 'DemosSR')
+        postfix = ('DemosSR', 'MosaicLR', 'HR')
         for v, p in zip(save_list, postfix):
             normalized = v[0].data.mul(255 / self.args.rgb_range)
             ndarr = normalized.byte().permute(1, 2, 0).cpu().numpy()

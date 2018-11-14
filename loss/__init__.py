@@ -70,12 +70,12 @@ class Loss(nn.modules.loss._Loss):
                 l.scheduler.step()
 
     def start_log(self):
-        self.log = torch.cat(
+        self.losslog = torch.cat(
             (self.losslog, torch.zeros(1, len(self.loss)))
         )
     
     def end_log(self, n_batches):
-        self.log[-1].div_(n_batches)
+        self.losslog[-1].div_(n_batches)
 
     def display_loss(self, batch):
         n_samples = batch + 1
