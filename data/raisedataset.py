@@ -32,7 +32,7 @@ class RAISEDataSet(data.Dataset):
             f.close()
 
         def _load_hdf():
-            self.images_hr = h5py.File(self._name_hrhdf())['data']
+            self.images_hr = h5py.File(self._name_hrhdf(), 'r')['data']
             self.images_lr = [
                 h5py.File(self._name_lrhdf(s))['data'] for s in self.scale               
             ]
@@ -122,7 +122,7 @@ class RAISEDataSet(data.Dataset):
         return os.path.join(
             self.dir_data,
             'RAISE_hdf',
-            '{}_hdf_HR.hdf5'
+            '{}_hdf_HR.hdf5'.format(self.split)
         )
     def _name_lrbin(self, scale):
         return os.path.join(
@@ -135,7 +135,7 @@ class RAISEDataSet(data.Dataset):
         return os.path.join(
             self.dir_data,
             'RAISE_hdf',
-            '{}_hdf_LR_X{}.hdf5'
+            '{}_hdf_LR_X{}.hdf5'.format(self.split, scale)
         )
 
 
