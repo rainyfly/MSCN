@@ -90,7 +90,7 @@ class RAISEDataSet(data.Dataset):
                 _load_hdf()
             except:
                 print('Preparing a hdf5 file')
-                hdf5_path = os.path.join(self.dir, 'RAISE_hdf')
+                hdf5_path = os.path.join(self.dir_data, 'RAISE_hdf')
                 if not os.path.isdir(hdf5_path):
                     os.mkdir(hdf5_path)
                 
