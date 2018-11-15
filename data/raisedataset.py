@@ -95,11 +95,11 @@ class RAISEDataSet(data.Dataset):
                     os.mkdir(hdf5_path)
                 
                 list_hr, list_lr = self._scan()
-                hr = [misc.imread(f) for f in list_hr]
+                hr = np.array([misc.imread(f) for f in list_hr])
                 _create_hdf5(self._name_hrhdf(), hr)
                 del hr
                 for si, s in enumerate(self.scale):
-                    lr_scale = [misc.imread(f) for f in list_lr[si]]
+                    lr_scale = np.array([misc.imread(f) for f in list_lr[si]])
                     _create_hdf5(self._name_lrhdf(s), lr_scale)
                     del lr_scale
                 _load_hdf()
