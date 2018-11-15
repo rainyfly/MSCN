@@ -144,7 +144,7 @@ def make_optimizer(args, my_model):
     elif args.optimizer == 'ADAM':
         optimizer_function = optim.Adam
         kwargs = {
-            'betas': (args.beta1, args.beta2)
+            'betas': (args.beta1, args.beta2),
             'eps': args.epsilon
         }
     elif args.optimizer == 'RMSprop':

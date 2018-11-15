@@ -142,9 +142,12 @@ class RAISEDataSet(data.Dataset):
         if self.args.ext == 'img':
             lr = misc.imread(lr)
             hr = misc.imread(hr)
+            
         elif self.args.ext.find('npy') >=0:
             lr = np.load(lr)
             hr = np.load(hr)
+        else:
+            filename = str(idx + 1)
         filename = os.path.splitext(os.path.split(filename)[-1])[0]
         return lr, hr, filename
 

@@ -28,15 +28,17 @@ class MSCN_Block(nn.Module):
     def __init__(self, depth):
         super(MSCN_Block, self).__init__()
         channel = 64
-        self.conv_3_1 = nn.Conv2d(in_channels = channel*depth, out_channels = channel, kernel_size = 3, stride = 1, padding = 1, bias = True)
+        self.bottle = nn.Conv2d(in_channels = channel * depth, out_channels = channel, kernel_size=3, stride=1, padding=1, bias=True)
+        self.conv_3_1 = nn.Conv2d(in_channels = channel, out_channels = channel, kernel_size = 3, stride = 1, padding = 1, bias = True)
         self.conv_3_2 = nn.Conv2d(in_channels = channel * 2, out_channels = channel, kernel_size = 3, stride = 1, padding = 1, bias = True)
-        self.conv_5_1 = nn.Conv2d(in_channels = channel*depth, out_channels = channel, kernel_size = 5, stride = 1, padding = 2, bias = True)
+        self.conv_5_1 = nn.Conv2d(in_channels = channel, out_channels = channel, kernel_size = 5, stride = 1, padding = 2, bias = True)
         self.conv_5_2 = nn.Conv2d(in_channels = channel * 2, out_channels = channel, kernel_size = 5, stride = 1, padding = 2, bias = True)
         self.CW = CWLayer(channel)
         self.relu = nn.ReLU(inplace=True)
 
 
     def forward(self, x):
+        x = self.bottle(x)
         identity_data = x
         output_3_1 = self.relu(self.conv_3_1(x))
         output_5_1 = self.relu(self.conv_5_1(x))

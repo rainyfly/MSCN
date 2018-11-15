@@ -1,5 +1,5 @@
 import os
-from importlib imort import_module
+from importlib import import_module
 
 import matplotlib
 matplotlib.use('Agg')
