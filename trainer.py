@@ -73,7 +73,7 @@ class Trainer():
             timer_data.tic()
 
         self.loss.end_log(len(self.loader_train))
-        self.error_last = self.loss.log[-1, -1]
+        self.error_last = self.loss.losslog[-1, -1]
 
     def test(self):
         epoch = self.scheduler.last_epoch + 1
