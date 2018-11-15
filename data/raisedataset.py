@@ -7,6 +7,8 @@ import scipy.misc as misc
 import torch
 import torch.utils.data as data 
 
+import h5py
+
 class RAISEDataSet(data.Dataset):
     def __init__(self, args, train=True):
         self.args = args
@@ -22,6 +24,17 @@ class RAISEDataSet(data.Dataset):
             self.images_hr = np.load(self._name_hrbin())
             self.images_lr = [
                 np.load(self._name_lrbin(s)) for s in self.scale
+            ]
+        
+        def _create_hdf5(path, data):
+        f = h5py.File(path,'w')
+        dset = f.create_dataset("data", data=data, chunks=True)
+        f.close()
+
+        def _load_hdf():
+            self.images_hr = h5py.File(self._name_hrhdf())['data']
+            self.images_lr = [
+                h5py.File(self._name_lrhdf(s))['data'] for s in self.scale               
             ]
 
         if args.ext == 'img':
@@ -69,20 +82,60 @@ class RAISEDataSet(data.Dataset):
                     np.save(self._name_lrbin(s), lr_scale)
                     del lr_scale
                 _load_bin()
+        elif args.ext.find('hdf') >= 0:
+            try:
+                if args.ext.find('reset') >= 0:
+                    raise IOError
+                print('Loading a hdf5 file')
+                _load_hdf()
+            except:
+                print('Preparing a hdf5 file')
+                hdf5_path = os.path.join(self.dir, 'RAISE_hdf')
+                if not os.path.isdir(hdf5_path):
+                    os.mkdir(hdf5_path)
+                
+                list_hr, list_lr = self._scan()
+                hr = [misc.imread(f) for f in list_hr]
+                _create_hdf5(self._name_hrhdf(), hr)
+                del hr
+                for si, s in enumerate(self.scale):
+                    lr_scale = [misc.imread(f) for f in list_lr[si]]
+                    _create_hdf5(self._name_lrhdf(s), lr_scale)
+                    del lr_scale
+                _load_hdf()
+
+
         else:
             print('Please define data type')
     
+    
+
+
     def _name_hrbin(self):
         return os.path.join(
             self.dir_data,
             'RAISE_bin',
             '{}_bin_HR.npy'.format(self.split)
         )
+    
+    def _name_hrhdf(self):
+        return os.path.join(
+            self.dir_data,
+            'RAISE_hdf',
+            '{}_hdf_HR.hdf5'
+        )
     def _name_lrbin(self, scale):
         return os.path.join(
             self.dir_data,
             'RAISE_bin',
             '{}_bin_LR_X{}.npy'.format(self.split, scale)
+        )
+    
+    def _name_lrhdf(self, scale):
+        return os.path.join(
+            self.dir_data,
+            'RAISE_hdf',
+            '{}_hdf_LR_X{}.hdf5'
         )
 
 
