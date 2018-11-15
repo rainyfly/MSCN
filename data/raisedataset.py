@@ -171,7 +171,7 @@ class RAISEDataSet(data.Dataset):
         lr_tensor, hr_tensor = common.np2Tensor([lr, hr], self.args.rgb_range)
         if self.input_channel == 1:
             lr_tensor = lr_tensor[0:1] + lr_tensor[1:2] + lr_tensor[2:]
-        return lr_tensor, hr_tensor, filename
+        return lr_tensor, hr_tensor, filename, self.idx_scale
 
 
 
