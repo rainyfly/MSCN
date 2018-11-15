@@ -27,9 +27,9 @@ class RAISEDataSet(data.Dataset):
             ]
         
         def _create_hdf5(path, data):
-        f = h5py.File(path,'w')
-        dset = f.create_dataset("data", data=data, chunks=True)
-        f.close()
+            f = h5py.File(path,'w')
+            dset = f.create_dataset("data", data=data, chunks=True)
+            f.close()
 
         def _load_hdf():
             self.images_hr = h5py.File(self._name_hrhdf())['data']
