@@ -28,7 +28,8 @@ class RAISEDataSet(data.Dataset):
         
         def _create_hdf5(path, data):
             f = h5py.File(path,'w')
-            dset = f.create_dataset("data", data=data, chunks=True)
+            dt = h5py.special_dtype(vlen=np.dtype('int8'))
+            dset = f.create_dataset("data", dtype=dt, data=data, chunks=True)
             f.close()
 
         def _load_hdf():
