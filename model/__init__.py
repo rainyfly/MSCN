@@ -86,7 +86,8 @@ class Model(nn.Module):
         h_half, w_half = scale * h_half, scale * w_half
         h_size, w_size = scale * h_size, scale * w_size
         shave *= scale
-
+        if c == 1:
+            c = 3
         output = x.new(b, c, h, w)
         output[:, :, 0:h_half, 0:w_half] \
             = sr_list[0][:, :, 0:h_half, 0:w_half]

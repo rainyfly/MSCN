@@ -103,7 +103,6 @@ class Trainer():
                         eval_acc += utility.calc_psnr(
                             sr, hr, scale, self.args.rgb_range,
                         )
-                        save_list.extend([lr, hr])
 
                     if self.args.save_results:
                         self.ckp.save_results(filename, save_list, scale)
