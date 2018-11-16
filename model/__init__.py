@@ -63,6 +63,13 @@ class Model(nn.Module):
         n_GPUs = min(self.n_GPUs, 4)
         b, c, h, w = x.size()
         h_half, w_half = h // 2, w // 2
+        # keep the patch size is even
+        if h_half % 2 !=0:
+            if shave % 2 == 0:
+                shave = shave - 1
+        else:
+            if shave % 2 == 1:
+                shave = shave + 1
         h_size, w_size = h_half + shave, w_half + shave
         lr_list = [
             x[:, :, 0:h_size, 0:w_size],
@@ -77,6 +84,7 @@ class Model(nn.Module):
                 sr_batch = self.model(lr_batch)
                 sr_list.extend(sr_batch.chunk(n_GPUs, dim=0))
         else:
+            
             sr_list = [
                 self.forward_chop(patch, shave=shave, min_size=min_size) \
                 for patch in lr_list
