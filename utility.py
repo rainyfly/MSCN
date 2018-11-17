@@ -15,6 +15,7 @@ import torch
 import torch.optim as optim
 import torch.optim.lr_scheduler as lrs
 
+
 class timer():
     def __init__(self):
         self.acc = 0
@@ -80,7 +81,7 @@ class checkpoint():
         self.plot_psnr(epoch)
         torch.save(self.psnrlog, os.path.join(self.dir, 'psnr_log.pt'))
         torch.save(
-            trainner.optimizer.state_dict(),
+            trainer.optimizer.state_dict(),
             os.path.join(self.dir, 'optimizer.pt')
         )
     
