@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import ops 
+from model import ops 
 
 def make_model(args, parent=False):
     return Net()

@@ -3,6 +3,10 @@ import torch.nn as nn
 import numpy as np
 import math
 
+def make_model(args, parent=False):
+    return MSCN()
+
+
 ## Channel Attention (CA) Layer
 class CALayer(nn.Module):
     def __init__(self, channel, reduction=16):
@@ -51,6 +55,7 @@ class MSCN(nn.Module):
     def __init__(self):
         super(MSCN, self).__init__()
         out_channel = 64
+        scale = 2
         self.head =  nn.Sequential(*[nn.Conv2d(1,256,kernel_size=4,stride=2, padding=1),
                         nn.PixelShuffle(2),
                         nn.Conv2d(64, 128, kernel_size=5, stride=1, padding=2),

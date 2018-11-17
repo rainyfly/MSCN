@@ -29,8 +29,8 @@ class SRFeat(nn.Module):
                         nn.Conv2d(128, 128, kernel_size=3, padding=1),
                         nn.ReLU()]
                     )
-        self.body = [ResidualBlock() for i in range(16)]
-        self.bottles = [nn.Conv2d(128,128,kernel_size=1) for i in range(15)]
+        self.body = nn.ModuleList([ResidualBlock() for i in range(16)])
+        self.bottles = nn.ModuleList([nn.Conv2d(128,128,kernel_size=1) for i in range(15)])
         self.tail = nn.Sequential(nn.Conv2d(128,256,kernel_size=3,padding=1),nn.PixelShuffle(2),nn.Conv2d(64,3,kernel_size=3,padding=1))
 
     def forward(self, x):

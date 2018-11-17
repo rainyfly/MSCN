@@ -1,0 +1,13 @@
+#CUDA_VISIBLE_DEVICES=5 python main.py --model baseline --save baselineT --print_model --pre_train pretrain/baseline.pt --test_only --save_results --chop --data_test TestDataSet
+#CUDA_VISIBLE_DEVICES=5 python main.py --model ddbpn --save ddbpnT --print_model --pre_train pretrain/ddbpn.pt --test_only --save_results --chop --data_test TestDataSet
+#CUDA_VISIBLE_DEVICES=5 python main.py --model edsr --save edsrT --print_model --pre_train pretrain/edsr.pt --test_only --save_results --chop --data_test TestDataSet
+#CUDA_VISIBLE_DEVICES=5 python main.py --model memnet --save memnetT --print_model --pre_train pretrain/memnet.pt --test_only --save_results --chop --data_test TestDataSet
+#CUDA_VISIBLE_DEVICES=5 python main.py --model rcan --save rcanT --print_model --pre_train pretrain/rcan.pt --test_only --save_results --chop --data_test TestDataSet
+#CUDA_VISIBLE_DEVICES=5 python main.py --model srfeat --save srfeatT --print_model --pre_train pretrain/srfeat.pt --test_only --save_results --chop --data_test TestDataSet
+#CUDA_VISIBLE_DEVICES=5 python main.py --model carn --save carnT --print_model --pre_train pretrain/carn.pt --test_only --save_results --chop --data_test TestDataSet
+#CUDA_VISIBLE_DEVICES=5 python main.py --model dsrn --save dsrnT --print_model --pre_train pretrain/dsrn.pt --test_only --save_results --chop --data_test TestDataSet
+#CUDA_VISIBLE_DEVICES=5 python main.py --model idn --save idnT --print_model --pre_train pretrain/idn.pt --test_only --save_results --chop --data_test TestDataSet
+#CUDA_VISIBLE_DEVICES=5 python main.py --model msrn --save msrnT --print_model --pre_train pretrain/msrn.pt --test_only --save_results --chop --data_test TestDataSet
+#CUDA_VISIBLE_DEVICES=5 python main.py --model srdensenet --save srdensenetT --print_model --pre_train pretrain/srdensenet.pt --test_only --save_results --chop --data_test TestDataSet
+CUDA_VISIBLE_DEVICES=5 python main.py --model mscn --save mscnT --print_model --pre_train pretrain/mscn.pt --test_only --save_results --chop --data_test TestDataSet
+CUDA_VISIBLE_DEVICES=5 python main.py --model cadbn --save cadbnT --print_model --pre_train pretrain/cadbn.pt --test_only --save_results --chop --data_test TestDataSet
