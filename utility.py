@@ -54,7 +54,7 @@ class checkpoint():
                 args.load = '.'
             else:
                 self.psnrlog = torch.load(self.dir + '/psnr_log.pt')
-                print('Continue from epoch{}...'.format(len(self.log)))
+                print('Continue from epoch{}...'.format(len(self.psnrlog)))
         if args.reset:
             os.system('rm -rf ' + self.dir)
             args.load = '.'
