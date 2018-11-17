@@ -2,6 +2,9 @@ import torch
 import torch.nn as nn
 import ops 
 
+def make_model(args, parent=False):
+    return Net()
+
 class Block(nn.Module):
     def __init__(self, 
                  in_channels, out_channels,

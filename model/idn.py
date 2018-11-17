@@ -5,6 +5,8 @@ import torch.nn.functional as F
 import numpy as np
 from torch.autograd import Variable
 
+def make_model(args, parent=False):
+    return IDN()
 def Inter_Bicubic(x, scale):
     x_numpy = x.data.cpu().numpy()
     x_resize = np.random.random([x_numpy.shape[0],x_numpy.shape[1],x_numpy.shape[2]*scale,x_numpy.shape[3]*scale])

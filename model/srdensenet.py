@@ -1,7 +1,8 @@
 import torch
 import torch.nn as nn
 
-
+def make_model(args, parent=False):
+    return SRDenseNet()
 
 class DenseBlock(nn.Module):
     

@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 import time 
 
+def make_model(args, parent=False):
+    return ResNetDemSR(24, 256, 2)
 class BasicBlock(nn.Module):
   def __init__(self,in_channels,out_channels,stride=1):
     super(BasicBlock, self).__init__()

@@ -2,6 +2,9 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+def make_model(args, parent=False):
+    return SRFeat()
+
 class ResidualBlock(nn.Module):
     def __init__(self):
         super(ResidualBlock, self).__init__()

@@ -3,6 +3,8 @@ import common
 import torch.nn as nn
 
 def make_model(args, parent=False):
+    args.n_resblocks = 16
+    args.n_feats = 256
     return EDSR(args)
 
 ## EDSR

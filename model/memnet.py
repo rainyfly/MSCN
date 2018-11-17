@@ -4,6 +4,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 
+def make_model(args, parent=False):
+    return MemNet(3, 64, 6, 6)
 
 class MemNet(nn.Module):
     def __init__(self, in_channels, channels, num_memblock, num_resblock):

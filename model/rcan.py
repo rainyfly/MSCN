@@ -3,6 +3,10 @@ from model import common
 import torch.nn as nn
 
 def make_model(args, parent=False):
+    args.n_resblocks = 20
+    args.n_resgroups = 10
+    args.n_feats = 64
+    args.reduction = 16
     return RCAN(args)
 
 ## Channel Attention (CA) Layer

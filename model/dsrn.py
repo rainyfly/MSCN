@@ -2,6 +2,8 @@ import torch.nn as nn
 import torch
 import numpy as numpy
 
+def make_model(args, parent=False):
+    return DSRN(7)
 class DSRN(nn.Module):
     def __init__(self,T):
         super(DSRN, self).__init__()

@@ -4,7 +4,8 @@ import numpy as np
 import math
 import torch.nn.init as init
 
-
+def make_model(args, parent=False):
+    return MSRN()
 # --------------------------MSRB------------------------------- #
 
 class MSRB_Block(nn.Module):
