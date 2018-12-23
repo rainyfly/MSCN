@@ -9,7 +9,7 @@ import torch.utils.data as data
 
 import h5py
 
-class RAISEDataSet(data.Dataset):
+class RAISEDataSet300(data.Dataset):
     def __init__(self, args, train=True):
         self.args = args
         self.train = train
@@ -70,7 +70,7 @@ class RAISEDataSet(data.Dataset):
                 _load_bin()
             except:
                 print('Preparing a binary file')
-                bin_path = os.path.join(self.dir_data, 'RAISE_bin')
+                bin_path = os.path.join(self.dir_data, 'RAISE_bin300')
                 if not os.path.isdir(bin_path):
                     os.mkdir(bin_path)
 
@@ -115,8 +115,8 @@ class RAISEDataSet(data.Dataset):
     def _name_hrbin(self):
         return os.path.join(
             self.dir_data,
-            'RAISE_bin',
-            '{}_bin_HR.npy'.format(self.split)
+            'RAISE_bin300',
+            '{}_bin_HR300.npy'.format(self.split)
         )
     
     def _name_hrhdf(self):
@@ -128,7 +128,7 @@ class RAISEDataSet(data.Dataset):
     def _name_lrbin(self, scale):
         return os.path.join(
             self.dir_data,
-            'RAISE_bin',
+            'RAISE_bin300',
             '{}_bin_LR_X{}.npy'.format(self.split, scale)
         )
     
@@ -143,34 +143,22 @@ class RAISEDataSet(data.Dataset):
     def _set_filesystem(self, dir_data, is_train):
         self.dir_data = dir_data
         if is_train:
-            self.dir_hr = os.path.join(dir_data, 'RAISE_train_HR')
-            self.dir_lr = os.path.join(dir_data, 'RAISE_train_LR_mosaic')
+            self.dir_hr = os.path.join(dir_data, 'RAISE_train_HR300')
+            self.dir_lr = os.path.join(dir_data, 'RAISE_train_LR_mosaic300')
         else:
-            self.dir_hr = os.path.join(dir_data, 'RAISE_valid_HR')
-            self.dir_lr = os.path.join(dir_data, 'RAISE_valid_LR_mosaic')
+            self.dir_hr = os.path.join(dir_data, 'RAISE_test_HR')
+            self.dir_lr = os.path.join(dir_data, 'RAISE_test_LR_mosaic')
         self.ext = '.TIF'
         
     def _scan(self):
         list_hr = []
         list_lr = [[] for _ in self.scale]
-        building = [87, 250, 384, 424, 558, 660, 761, 854, 1241, 1493, 1746, 1990]
-        landscape = [37, 203, 382, 443, 512, 703, 865, 993, 1157, 1332, 1600, 1853]
-        objects = [127,  389, 908,  1741]
-        people = [304, 513, 969, 1360, 1621, 1822]
-        nature = [70, 274, 436, 751, 1037, 1279]
-        testset = building + objects + people + landscape + nature
-        for i in range(1,2001,1):
-            filename = '{}'.format(i)
-            if self.train:
-                if i not in testset:
-                    list_hr.append(os.path.join(self.dir_hr, filename + self.ext))
+        Imageset = os.listdir(self.dir_hr)
+        self.filesname = Imageset
+        for i, fn in enumerate(Imageset):
+                    list_hr.append(os.path.join(self.dir_hr, fn))
                     for si, s in enumerate(self.scale):
-                        list_lr[si].append(os.path.join(self.dir_lr, 'X{}'.format(s), filename + self.ext))
-            else:
-                if i in testset:
-                    list_hr.append(os.path.join(self.dir_hr, filename + self.ext))
-                    for si, s in enumerate(self.scale):
-                        list_lr[si].append(os.path.join(self.dir_lr, 'X{}'.format(s), filename + self.ext))
+                        list_lr[si].append(os.path.join(self.dir_lr, 'X{}'.format(s), fn))
         return list_hr, list_lr
 
     def __len__(self):
@@ -201,7 +189,7 @@ class RAISEDataSet(data.Dataset):
             lr = np.load(lr)
             hr = np.load(hr)
         else:
-            filename = str(idx + 1)
+            filename = self.filesname[idx]
         filename = os.path.splitext(os.path.split(filename)[-1])[0]
         return lr, hr, filename
 

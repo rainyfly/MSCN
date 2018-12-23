@@ -15,8 +15,8 @@ def get_patch(img_in, img_tar, patch_size, scale, multi_scale=False):
     tp = p * patch_size
     ip = tp // scale
 
-    ix = random.randrange(0, iw - ip + 1)
-    iy = random.randrange(0, ih - ip + 1)
+    ix = random.randrange(0, iw - ip + 1, patch_size//2)
+    iy = random.randrange(0, ih - ip + 1, patch_size//2)
     tx, ty = scale * ix, scale * iy
 
     img_in = img_in[iy:iy + ip, ix:ix + ip, :]
