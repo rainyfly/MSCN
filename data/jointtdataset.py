@@ -22,9 +22,14 @@ class JointTDataSet(data.Dataset):
         self.repeat = 1
         self.toTensor = ToTensor()
     def _scan(self):
-        dataset = h5py.File('/data/chenjian/experiment/data/JointT.h5','r')
-        images_hr = dataset['label']
-        images_lr = dataset['train']
+        if self.train:
+            dataset = h5py.File('/data/chenjian/experiment/data/JointT.h5','r')
+            images_hr = dataset['label']
+            images_lr = dataset['train']
+        else:
+            dataset = h5py.File('/data/chenjian/experiment/data/JointTVad.h5','r')
+            images_hr = dataset['label']
+            images_lr = dataset['train']
         return images_hr, images_lr
 
     def __len__(self):
@@ -42,6 +47,7 @@ class JointTDataSet(data.Dataset):
     
     
     def __getitem__(self, idx):
+        
         lr, hr = self.images_lr[idx], self.images_hr[idx]
         lr, hr = self.toTensor(lr), self.toTensor(hr)
         lr = lr[0:1] + lr[1:2]+ lr[2:3]
