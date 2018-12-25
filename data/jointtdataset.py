@@ -53,3 +53,6 @@ class JointTDataSet(data.Dataset):
         lr = lr[0:1] + lr[1:2]+ lr[2:3]
         filename = str(idx + 1)
         return lr, hr, filename, self.idx_scale
+
+    def set_scale(self, idx_scale):
+        self.idx_scale = idx_scale

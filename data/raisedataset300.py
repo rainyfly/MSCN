@@ -3,10 +3,9 @@ from data import common
 
 import numpy as np
 import scipy.misc as misc
-
+import scipy.io
 import torch
 import torch.utils.data as data 
-
 import h5py
 
 class RAISEDataSet300(data.Dataset):
