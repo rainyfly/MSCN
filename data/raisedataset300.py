@@ -200,8 +200,8 @@ class RAISEDataSet300(data.Dataset):
             lr, hr = common.get_patch(
                 lr, hr, patch_size, scale, multi_scale=True
             )
-            lr, hr = common.augment([lr, hr])
-            lr = common.add_noise(lr, self.args.noise)
+       #     lr, hr = common.augment([lr, hr])
+       #     lr = common.add_noise(lr, self.args.noise)
         else:
             ih, iw = lr.shape[0:2]
             hr = hr[0:ih * scale, 0:iw * scale]
