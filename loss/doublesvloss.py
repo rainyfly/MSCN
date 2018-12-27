@@ -16,10 +16,12 @@ class DoubleSVLoss(Loss):
                 loss = l['function'](demos, lg)
                 effective_loss = l['weight'] * loss
                 losses.append(effective_loss)
+                self.losslog[-1, i] += effective_loss.item()
             elif i == 2 and l['function'] is not None:
                 loss = l['function'](demosr, sr)
                 effective_loss = l['weight'] * loss
                 losses.append(effective_loss)
+                self.losslog[-1, i] += effective_loss.item()
         loss_sum = sum(losses)
         if len(self.loss) > 1:
             self.losslog[-1, -1] += loss_sum.item()
