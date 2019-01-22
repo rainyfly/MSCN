@@ -2,9 +2,10 @@ import torch
 import torch.nn as nn
 import numpy as np
 import math
+import torch.nn.init as init
 
 def make_model(args, parent=False):
-    return MSCN()
+    return MSRN_1_18_d()
 
 
 ## Channel Attention (CA) Layer
@@ -24,20 +25,25 @@ class CALayer(nn.Module):
     def forward(self, x):
         y = self.avg_pool(x)
         y = self.conv_du(y)
-        return y
+        return x * y
 
 
-class MSCN_Block(nn.Module):
+
+# --------------------------MSRB------------------------------- #
+
+class MSRB_Block(nn.Module):
     def __init__(self):
-        super(MSCN_Block, self).__init__()
+        super(MSRB_Block, self).__init__()
+        
         channel = 64
-        self.conv_3_1 = nn.Conv2d(in_channels = channel, out_channels = channel, kernel_size = 3, stride = 1, padding = 1, bias = True)
-        self.conv_3_2 = nn.Conv2d(in_channels = channel * 2, out_channels = channel, kernel_size = 3, stride = 1, padding = 1, bias = True)
-        self.conv_5_1 = nn.Conv2d(in_channels = channel, out_channels = channel, kernel_size = 5, stride = 1, padding = 2, bias = True)
-        self.conv_5_2 = nn.Conv2d(in_channels = channel * 2, out_channels = channel, kernel_size = 5, stride = 1, padding = 2, bias = True)
-        self.CA = CALayer(channel)
-        self.relu = nn.ReLU(inplace=True)
 
+        self.conv_3_1 = nn.Conv2d(in_channels = channel, out_channels = channel, kernel_size = 3, stride = 1, padding = 1, bias = True)
+        self.conv_3_2 = nn.Conv2d(in_channels = channel * 2, out_channels = channel * 2, kernel_size = 3, stride = 1, padding = 1, bias = True)
+        self.conv_5_1 = nn.Conv2d(in_channels = channel, out_channels = channel, kernel_size = 5, stride = 1, padding = 2, bias = True)
+        self.conv_5_2 = nn.Conv2d(in_channels = channel * 2, out_channels = channel * 2, kernel_size = 5, stride = 1, padding = 2, bias = True)
+        self.confusion = nn.Conv2d(in_channels = channel * 4, out_channels = channel, kernel_size = 1, stride = 1, padding = 0, bias = True)
+        self.relu = nn.ReLU(inplace=True)
+        self.ca = CALayer(channel)
 
     def forward(self, x):
         identity_data = x
@@ -46,34 +52,42 @@ class MSCN_Block(nn.Module):
 
         input_2 = torch.cat([output_3_1, output_5_1], 1)
         output_3_2 = self.relu(self.conv_3_2(input_2))
-        output_5_2 = self.CA(self.relu(self.conv_5_2(input_2)))
-        output = output_3_2 * output_5_2
+        output_5_2 = self.relu(self.conv_5_2(input_2))
+
+        output = torch.cat([output_3_2, output_5_2], 1)
+        output = self.confusion(output)
+        output = self.ca(output)
         output = torch.add(output, identity_data)
         return output
 
-class MSCN(nn.Module):
+# --------------------------MSRN------------------------------- #
+
+class MSRN_1_18_d(nn.Module):
     def __init__(self):
-        super(MSCN, self).__init__()
-        out_channel = 64
+        super(MSRN_1_18_d, self).__init__()
+        
+        # channel = out_channels_MSRB
+        out_channels_MSRB = 64
         scale = 2
+
         self.head =  nn.Sequential(*[nn.Conv2d(1,256,kernel_size=4,stride=2, padding=1),
                         nn.PixelShuffle(2),
                         nn.Conv2d(64, 128, kernel_size=5, stride=1, padding=2),
                         nn.PReLU(),
-                        nn.Conv2d(128, out_channel, kernel_size=3, padding=1),
+                        nn.Conv2d(128, out_channels_MSRB, kernel_size=3, padding=1),
                         nn.ReLU()]
                     )
-        self.residual1 = self.make_layer(MSCN_Block)
-        self.residual2 = self.make_layer(MSCN_Block)
-        self.residual3 = self.make_layer(MSCN_Block)
-        self.residual4 = self.make_layer(MSCN_Block)
-        self.residual5 = self.make_layer(MSCN_Block)
-        self.residual6 = self.make_layer(MSCN_Block)
-        self.residual7 = self.make_layer(MSCN_Block)
-        self.residual8 = self.make_layer(MSCN_Block)
-        self.bottle = nn.Conv2d(in_channels= out_channel * 8 + 64, out_channels = 64, kernel_size = 1, stride = 1, padding = 0, bias = True)
+        self.residual1 = self.make_layer(MSRB_Block)
+        self.residual2 = self.make_layer(MSRB_Block)
+        self.residual3 = self.make_layer(MSRB_Block)
+        self.residual4 = self.make_layer(MSRB_Block)
+        self.residual5 = self.make_layer(MSRB_Block)
+        self.residual6 = self.make_layer(MSRB_Block)
+        self.residual7 = self.make_layer(MSRB_Block)
+        self.residual8 = self.make_layer(MSRB_Block)
+        self.bottle = nn.Conv2d(in_channels= out_channels_MSRB * 8 + 64, out_channels = 64, kernel_size = 1, stride = 1, padding = 0, bias = True)
         self.conv = nn.Conv2d(in_channels = 64, out_channels = 64 * scale * scale, kernel_size = 3, stride = 1, padding = 1, bias = True)
-        self.convt = nn.PixelShuffle(2)
+        self.convt = nn.PixelShuffle(scale)
         self.conv_output = nn.Conv2d(in_channels = 64, out_channels = 3, kernel_size = 3, stride = 1, padding = 1, bias = True)
 
 
@@ -106,5 +120,3 @@ class MSCN(nn.Module):
         out = self.convt(self.conv(out))
         out = self.conv_output(out)
         return out
-
-

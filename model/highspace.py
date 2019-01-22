@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 
-from common import ResBlock
-from common import default_conv
+from .common import ResBlock
+from .common import default_conv
 
 def make_model(args):
     return HighSpace(128, 2)

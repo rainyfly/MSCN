@@ -68,6 +68,7 @@ class checkpoint():
 
         open_type = 'a' if os.path.exists(self.dir + '/log.txt') else 'w'
         self.log_file = open(self.dir + '/log.txt', open_type)
+        self.error_file = open(self.dir + '/error.txt', open_type)
         with open(self.dir + '/config.txt', open_type) as f:
             f.write(now + '\n\n')
             for arg in vars(args):
@@ -94,9 +95,15 @@ class checkpoint():
         if refresh:
             self.log_file.flush()
     
+    def write_error(self, error, refresh=False):
+        self.error_file.write(error + '\n')
+        if refresh:
+            self.error_file.flush()
+ 
     def done(self):
         self.log_file.close()
-    
+        self.error_file.close()
+
     def plot_psnr(self, epoch):
         axis = np.linspace(1, epoch, epoch)
         label = 'PSNR results on {}'.format(self.args.data_test)

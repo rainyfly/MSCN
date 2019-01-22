@@ -47,6 +47,7 @@ class Trainer():
             lr, hr = self.prepare([lr, hr])
             idx_scale = idx_scale[0]
             timer_data.hold()
+        #    lr, hr = self.prepare([lr, hr])
             timer_model.tic()
 
             self.optimizer.zero_grad()
@@ -59,7 +60,9 @@ class Trainer():
                 print('Skip this batch {}! (Loss: {})'.format(
                     batch + 1, loss.item()
                 ))
-
+                self.ckp.write_error('Skip this batch {}! (Loss: {})'.format(
+                    batch + 1, loss.item()
+                ))
             timer_model.hold()
 
             if (batch + 1) % self.args.print_every == 0:
@@ -74,6 +77,7 @@ class Trainer():
 
         self.loss.end_log(len(self.loader_train))
         self.error_last = self.loss.losslog[-1, -1]
+        self.ckp.write_error('\n', refresh=True)
 
     def test(self):
         epoch = self.scheduler.last_epoch + 1
